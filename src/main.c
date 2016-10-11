@@ -107,6 +107,15 @@ int main(void)
    ADC_SoftwareStartConv(ADC1);
   }
 
+  /*Init LEDky*/
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+  GPIO_InitTypeDef mojGPIO;
+  mojGPIO.GPIO_Pin = GPIO_Pin_5;
+  mojGPIO.GPIO_Mode = GPIO_Mode_OUT;
+  mojGPIO.GPIO_OType = GPIO_OType_PP;
+  mojGPIO.GPIO_Speed = GPIO_Speed_400KHz;
+  GPIO_Init(GPIOA, &mojGPIO);
+
 
   uint16_t AD_value;
 
@@ -117,6 +126,13 @@ int main(void)
 	  ADC_SoftwareStartConv(ADC1);
 	  while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
 	  AD_value=ADC_GetConversionValue(ADC1);
+
+	  for (i = 0; i <= (100*AD_value); i++){
+		  GPIO_SetBits(GPIOA, GPIO_Pin_5);
+	  }
+	  for (i = 0; i <= (100*AD_value); i++){
+		  GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	  }
 
 	i++;
   }
